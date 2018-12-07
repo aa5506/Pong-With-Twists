@@ -57,21 +57,31 @@ class Player2(Paddle):
             self.dir = 1
         else:
             self.vy = 0
+            
+class ball:
+    def __init__(self,r):
+        self.r = r
+        self.x = x
+        self.y = y
+        self.vx = 0
+        self.vy = 0
         
+        
+        
+        
+        
+    
+    
+    
         
             
-            
-        
-
-        
-        
-        
 class Game:
-    def __init__(self,w,h,th,ln):
+    def __init__(self,w,h,th,ln,r):
         self.w = w
         self.h = h
         self.th = th
         self.ln = ln
+        self.r = r
         self.paddle1 = Player1(0,self.h/2,0)
         self.paddle2 = Player2(self.w-self.th,self.h/2,0)
         
@@ -81,10 +91,6 @@ class Game:
         self.paddle2.display()
         
     
-    
-    
-        
-        
         
 g = Game(500,500,20,100)        
         
