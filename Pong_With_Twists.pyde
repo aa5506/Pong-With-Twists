@@ -8,25 +8,18 @@ class Paddle:
         self.v = v
         self.dir = 1
         self.vy = 0
-        
-        
     def update(self):
         if self.y + self.vy > 0 and self.y + self.vy < g.h - g.ln:
             self.y += self.vy
-        
-        
     def display(self):
         self.update()
         fill(250)
         rect(self.x,self.y,g.th,100)
-
-            
-            
+    
 class Player1(Paddle):
     def __init__(self,x,y,v):
         Paddle.__init__(self,x,y,v)
         self.keyHandler={UP:False, DOWN:False}
-        
     def update(self):
         if self.y + self.vy > 0 and self.y + self.vy < g.h - g.ln:
             self.y += self.vy
@@ -38,14 +31,11 @@ class Player1(Paddle):
             self.dir = 1
         else:
             self.vy = 0
-                
-            
-        
+                    
 class Player2(Paddle):
     def __init__(self,x,y,v):
         Paddle.__init__(self,x,y,v)
         self.keyHandler={SHIFT:False, CONTROL:False}
-        
     def update(self):
         if self.y + self.vy > 0 and self.y + self.vy < g.h - g.ln:
             self.y += self.vy
@@ -63,36 +53,19 @@ class Ball:
         self.r = r
         self.x = x
         self.y = y
-        self.vx = 50
+        self.vx = 3
         #self.vy = 0
         self.dir = 1
-        
-        
     def update(self):
-    #     if self.x + self.vx > 0 and self.x + self.vx < g.w - g.th:
-    #         self.x += self.vx
-    #     if self.keyHandler[LEFT]:
-    #         self.vx = -5
-    #         self.dir = -1
-    #     elif self.keyHandler[RIGHT]:
-    #         self.vx = 5
-    #         self.dir = 1
-    #     else:
-    #         self.vx = 0  
         self.x += self.vx      
 
     def display(self):
         self.update()
         fill(250)
-        ellipse(g.w/2,g.h/2,self.r,self.r)
+        ellipse(self.x,self.y,self.r,self.r)
             
         
         
-    
-    
-    
-        
-            
 class Game:
     def __init__(self,w,h,th,ln,r):
         self.w = w
@@ -103,7 +76,6 @@ class Game:
         self.paddle1 = Player1(self.w-self.th,self.h/2,0)  #(0,self.h/2,0)
         self.paddle2 = Player2(0,self.h/2,0)   #(self.w-self.th,self.h/2,0)
         self.ball = Ball(self.w/2,self.h/2,self.r)
-        
     def display(self):
         background(0)
         self.paddle1.display()
@@ -112,7 +84,7 @@ class Game:
         
     
         
-g = Game(500,500,20,100,50)        
+g = Game(500,500,20,100,30)        
         
         
 def setup():
