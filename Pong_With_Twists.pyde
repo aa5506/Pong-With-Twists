@@ -58,16 +58,34 @@ class Player2(Paddle):
         else:
             self.vy = 0
             
-class ball:
-    def __init__(self,r):
+class Ball:
+    def __init__(self,x,y,r):
         self.r = r
         self.x = x
         self.y = y
-        self.vx = 0
-        self.vy = 0
+        self.vx = 50
+        #self.vy = 0
+        self.dir = 1
         
         
-        
+    def update(self):
+    #     if self.x + self.vx > 0 and self.x + self.vx < g.w - g.th:
+    #         self.x += self.vx
+    #     if self.keyHandler[LEFT]:
+    #         self.vx = -5
+    #         self.dir = -1
+    #     elif self.keyHandler[RIGHT]:
+    #         self.vx = 5
+    #         self.dir = 1
+    #     else:
+    #         self.vx = 0  
+        self.x += self.vx      
+
+    def display(self):
+        self.update()
+        fill(250)
+        ellipse(g.w/2,g.h/2,self.r,self.r)
+            
         
         
     
@@ -82,17 +100,19 @@ class Game:
         self.th = th
         self.ln = ln
         self.r = r
-        self.paddle1 = Player1(0,self.h/2,0)
-        self.paddle2 = Player2(self.w-self.th,self.h/2,0)
+        self.paddle1 = Player1(self.w-self.th,self.h/2,0)  #(0,self.h/2,0)
+        self.paddle2 = Player2(0,self.h/2,0)   #(self.w-self.th,self.h/2,0)
+        self.ball = Ball(self.w/2,self.h/2,self.r)
         
     def display(self):
         background(0)
         self.paddle1.display()
         self.paddle2.display()
+        self.ball.display()
         
     
         
-g = Game(500,500,20,100)        
+g = Game(500,500,20,100,50)        
         
         
 def setup():
@@ -111,6 +131,7 @@ def keyPressed():
         g.paddle2.keyHandler[SHIFT] = True
     elif keyCode == CONTROL:
         g.paddle2.keyHandler[CONTROL] = True
+
         
 def keyReleased():
     if keyCode == UP:
@@ -121,7 +142,7 @@ def keyReleased():
         g.paddle2.keyHandler[SHIFT] = False
     elif keyCode == CONTROL:
         g.paddle2.keyHandler[CONTROL] = False
-    
+   
     
     
     
