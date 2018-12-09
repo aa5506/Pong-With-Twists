@@ -54,18 +54,30 @@ class Ball:
         self.y = y
         self.r = r
         self.vx = 1.5
-        #self.vy = 0.2
-        self.dir = 1
+        self.vy = 0
+        self.xdir = 1
+        self.ydir = 1
     def update(self):
         self.x += self.vx
-        #self.y += self.vy
-        self.vx = self.vx*self.dir
+        self.y += self.vy
+        self.vx = self.vx*self.xdir
+        self.vy = self.vy*self.ydir
         right = g.w - self.x - self.r
         left = self.x - self.r
+        if self.y - self.r <= 0 or self.y + self.r >= g.h:
+            self.ydir = self.ydir*(-1)
+            
         if right <= g.th and self.y >= g.paddle1.y and self.y <= g.paddle1.y + g.ln:
-            self.dir = self.dir*(-1) 
-        elif left <= g.th and self.y >= g.paddle2.y and self.y <= g.paddle2.y + g.ln: 
-            self.dir = self.dir*(-1) 
+            self.xdir = self.xdir*(-1)
+            if g.paddle1.vy != 0:
+                 self.vy = g.paddle1.vy
+                 self.ydir = self.ydir*(-1)
+                 
+        if left <= g.th and self.y >= g.paddle2.y and self.y <= g.paddle2.y + g.ln: 
+            self.xdir = self.xdir*(-1)
+            if g.paddle2.vy != 0:
+                self.vy = g.paddle2.vy 
+                self.ydir = self.ydir*(-1)
               
 
 
