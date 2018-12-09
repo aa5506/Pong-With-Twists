@@ -50,14 +50,24 @@ class Player2(Paddle):
             
 class Ball:
     def __init__(self,x,y,r):
-        self.r = r
         self.x = x
         self.y = y
-        self.vx = 3
-        #self.vy = 0
+        self.r = r
+        self.vx = 1.5
+        #self.vy = 0.2
         self.dir = 1
     def update(self):
-        self.x += self.vx      
+        self.x += self.vx
+        #self.y += self.vy
+        self.vx = self.vx*self.dir
+        right = g.w - self.x - self.r
+        left = self.x - self.r
+        if right <= g.th and self.y >= g.paddle1.y and self.y <= g.paddle1.y + g.ln:
+            self.dir = self.dir*(-1) 
+        elif left <= g.th and self.y >= g.paddle2.y and self.y <= g.paddle2.y + g.ln: 
+            self.dir = self.dir*(-1) 
+              
+
 
     def display(self):
         self.update()
