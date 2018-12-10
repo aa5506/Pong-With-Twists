@@ -2,10 +2,9 @@ import random, os
 path = os.getcwd()
 
 class Paddle:
-    def __init__(self,x,y,v):
+    def __init__(self,x,y,ln):
         self.x = x
         self.y = y
-        self.v = v
         self.dir = 1
         self.vy = 0
     def update(self):
@@ -14,7 +13,7 @@ class Paddle:
     def display(self):
         self.update()
         fill(250)
-        rect(self.x,self.y,g.th,100)
+        rect(self.x,self.y,g.th,g.ln)
     
 class Player1(Paddle):
     def __init__(self,x,y,v):
@@ -53,38 +52,32 @@ class Ball:
         self.x = x
         self.y = y
         self.r = r
-        self.vx = 1.5
-        self.vy = 0
+        self.vx = 3
+        self.vy = 3.5
         self.xdir = 1
         self.ydir = 1
     def update(self):
+
         self.x += self.vx
         self.y += self.vy
         self.vx = self.vx*self.xdir
         self.vy = self.vy*self.ydir
-        right = g.w - self.x - self.r
-        left = self.x - self.r
+
         if self.y - self.r <= 0 or self.y + self.r >= g.h:
             self.ydir = self.ydir*(-1)
             
+        right = g.w - (self.x + self.r)
+        left = self.x - self.r
         if right <= g.th and self.y >= g.paddle1.y and self.y <= g.paddle1.y + g.ln:
             self.xdir = self.xdir*(-1)
-            if g.paddle1.vy != 0:
-                 self.vy = g.paddle1.vy
-                 self.ydir = self.ydir*(-1)
-                 
         if left <= g.th and self.y >= g.paddle2.y and self.y <= g.paddle2.y + g.ln: 
             self.xdir = self.xdir*(-1)
-            if g.paddle2.vy != 0:
-                self.vy = g.paddle2.vy 
-                self.ydir = self.ydir*(-1)
-              
 
 
     def display(self):
         self.update()
         fill(250)
-        ellipse(self.x,self.y,self.r,self.r)
+        ellipse(self.x,self.y,self.r*2,self.r*2)
             
         
         
@@ -95,8 +88,8 @@ class Game:
         self.th = th
         self.ln = ln
         self.r = r
-        self.paddle1 = Player1(self.w-self.th,self.h/2,0)  #(0,self.h/2,0)
-        self.paddle2 = Player2(0,self.h/2,0)   #(self.w-self.th,self.h/2,0)
+        self.paddle1 = Player1(self.w-self.th,self.h/2,100)  #(0,self.h/2,0)
+        self.paddle2 = Player2(0,self.h/2,100)   #(self.w-self.th,self.h/2,0)
         self.ball = Ball(self.w/2,self.h/2,self.r)
     def display(self):
         background(0)
@@ -106,12 +99,13 @@ class Game:
         
     
         
-g = Game(500,500,20,100,30)        
+g = Game(500,500,20,120,15)        
         
         
 def setup():
     size(500,500)
     background(0)
+    # frameRate(15)
     
 def draw():
     g.display()
