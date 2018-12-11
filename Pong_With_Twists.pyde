@@ -57,7 +57,7 @@ class Ball:
         self.xdir = 1
         self.ydir = 1
     def update(self):
-
+    
         self.x += self.vx
         self.y += self.vy
         self.vx = self.vx*self.xdir
@@ -65,14 +65,11 @@ class Ball:
 
         if self.y - self.r <= 0 or self.y + self.r >= g.h:
             self.ydir = self.ydir*(-1)
-            
-        right = g.w - (self.x + self.r)
-        left = self.x - self.r
-        if right <= g.th and self.y >= g.paddle1.y and self.y <= g.paddle1.y + g.ln:
+                
+        if g.w - (self.x+self.r) <= g.th and self.y+self.r > g.paddle1.y and self.y-self.r < g.paddle1.y + g.ln:
             self.xdir = self.xdir*(-1)
-        if left <= g.th and self.y >= g.paddle2.y and self.y <= g.paddle2.y + g.ln: 
+        if self.x-self.r <= g.th and self.y+self.r > g.paddle2.y and self.y-self.r < g.paddle2.y + g.ln: 
             self.xdir = self.xdir*(-1)
-
 
     def display(self):
         self.update()
@@ -96,7 +93,7 @@ class Game:
         self.paddle1.display()
         self.paddle2.display()
         self.ball.display()
-        
+            
     
         
 g = Game(500,500,20,120,15)        
@@ -105,7 +102,7 @@ g = Game(500,500,20,120,15)
 def setup():
     size(500,500)
     background(0)
-    # frameRate(15)
+    #frameRate(40)
     
 def draw():
     g.display()
