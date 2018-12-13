@@ -1,7 +1,10 @@
 add_library('minim')
-import random, os
+import random, os, time
 path = os.getcwd()
 player = Minim(this)
+#timer = 0
+#pauseTime = 0
+
 
 class Paddle:
     def __init__(self,x,y,ln):
@@ -116,6 +119,9 @@ class Game:
         self.th = th
         self.ln = ln
         self.r = r
+        self.pauseTime = 0
+        self.cumulativePauseTime = 0
+        self.timer = 0 
         self.img = loadImage(path+ "/images/background.png")
         
         self.state = "menu"
@@ -132,9 +138,15 @@ class Game:
     
     def display(self):
 
+        currentTime = time.time()
+        elaspeTime = int(currentTime - self.timer - self.cumulativePauseTime)
         
+
         background(0)
         image(self.img,0,0,640,538)
+        fill(255,0,0)
+        textSize(30)
+        text(str(elaspeTime),50,30)
         self.paddle1.display()
         self.paddle2.display()
         self.ball.display()
@@ -164,7 +176,8 @@ def draw():
             fill(255,0,0)
         else:
             fill(255)
-        text("Instructions", g.w//3, g.h//1.3)  
+        text("Instructions", g.w//3, g.h//1.3)
+
         
     elif g.state == "play":
         if not g.pause:
@@ -181,7 +194,9 @@ def draw():
 def mouseClicked():
     if g.state == "menu" and g.w//3 < mouseX < g.w//3 + 200 and g.h//2 < mouseY < g.h//2 + 50:
         g.state = "play"
+        g.timer=time.time()
         g.music.play()
+        
         
     if g.state == "gameover" and 0 < mouseX < g.w and 0 < mouseY < g.h:
         g.__init__(640,538,20,120,15)
@@ -201,9 +216,13 @@ def keyPressed():
     
     elif keyCode == 80:
         if g.pause:
+            g.pauseTime = time.time() - g.pauseTime
+            g.cumulativePauseTime += g.pauseTime
             g.pause = False
         else:
             g.pause = True
+            g.pauseTime = time.time()
+            
         g.pauseSound.rewind()
         g.pauseSound.play()
         
