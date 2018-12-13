@@ -1,5 +1,7 @@
+add_library('minim')
 import random, os
 path = os.getcwd()
+player = Minim(this)
 
 class Paddle:
     def __init__(self,x,y,ln):
@@ -71,19 +73,34 @@ class Ball:
             return x
         
     def checkHit(self,x,r,y,vy):
+        speedlist = [0.5,0.75,1,1.25,1.5,1.75]
         if g.w - (self.x+self.r) < g.th and self.y+self.r > g.paddle1.y and self.y-self.r < g.paddle1.y + g.ln:
             if self.vx > 0:
-                x = self.vx = -self.vx
-                return x
+                if self.vx < 6:
+                    speed = speedlist[random.randint(0,5)]
+                    self. vx = self.vx * speed
+                    self.vx = -self.vx
+                else:
+                    self.vx = -self.vx
+        
             
         if self.x-self.r < g.th and self.y+self.r > g.paddle2.y and self.y-self.r < g.paddle2.y + g.ln: 
             if self.vx < 0:
-                x = self.vx = -self.vx
-                return x
+                if self.vx > -6:
+                    speed = speedlist[random.randint(0,5)]
+                    self. vx = self.vx * speed
+                    self.vx = -self.vx
+                else:
+                    self.vx = -self.vx
+        
     
     def checkWin(self,x,r,vx):
         if self.x + self.r > g.w or self.x - self.r < 0:
             g.state = "gameover"
+            g.music.pause()
+            g.music.rewind()
+            g.goSound.rewind()
+            g.goSound.play()
 
     def display(self):
         self.update()
@@ -99,24 +116,36 @@ class Game:
         self.th = th
         self.ln = ln
         self.r = r
+        self.img = loadImage(path+ "/images/background.png")
+        
         self.state = "menu"
+        
+        self.music = player.loadFile(path+"/sounds/music.mp3")
+        
+        self.pause = False
+        self.pauseSound = player.loadFile(path+"/sounds/pause.mp3")
+        self.goSound = player.loadFile(path+"/sounds/gameover.wav")
         
         self.paddle1 = Player1(self.w-self.th,self.h/2,100)  #(0,self.h/2,0)
         self.paddle2 = Player2(0,self.h/2,100)   #(self.w-self.th,self.h/2,0)
         self.ball = Ball(self.w/2,self.h/2,self.r)
+    
     def display(self):
+
+        
         background(0)
+        image(self.img,0,0,640,538)
         self.paddle1.display()
         self.paddle2.display()
         self.ball.display()
             
     
         
-g = Game(500,500,20,120,15)        
+g = Game(640,538,20,120,15)        
         
         
 def setup():
-    size(500,500)
+    size(640,538)
     background(0)
     #frameRate(40)
     
@@ -138,8 +167,9 @@ def draw():
         text("Instructions", g.w//3, g.h//1.3)  
         
     elif g.state == "play":
-        background(0)
-        g.display()
+        if not g.pause:
+            background(0)
+            g.display()
     
     elif g.state == "gameover":
         textSize(50)
@@ -151,8 +181,10 @@ def draw():
 def mouseClicked():
     if g.state == "menu" and g.w//3 < mouseX < g.w//3 + 200 and g.h//2 < mouseY < g.h//2 + 50:
         g.state = "play"
+        g.music.play()
+        
     if g.state == "gameover" and 0 < mouseX < g.w and 0 < mouseY < g.h:
-        g.__init__(500,500,20,120,15)
+        g.__init__(640,538,20,120,15)
         
         
         
@@ -166,7 +198,14 @@ def keyPressed():
         g.paddle2.keyHandler[SHIFT] = True
     elif keyCode == CONTROL:
         g.paddle2.keyHandler[CONTROL] = True
-
+    
+    elif keyCode == 80:
+        if g.pause:
+            g.pause = False
+        else:
+            g.pause = True
+        g.pauseSound.rewind()
+        g.pauseSound.play()
         
 def keyReleased():
     if keyCode == UP:
