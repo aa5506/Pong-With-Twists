@@ -17,7 +17,7 @@ class Paddle:
             self.y += self.vy
     def display(self):
         self.update()
-        fill(250)
+        fill(255)
         rect(self.x,self.y,g.th,g.ln)
     
 class Player1(Paddle):
@@ -85,6 +85,9 @@ class Ball:
                     self.vx = -self.vx
                 else:
                     self.vx = -self.vx
+            g.hit.rewind()
+            g.hit.play()
+            
         
             
         if self.x-self.r < g.th and self.y+self.r > g.paddle2.y and self.y-self.r < g.paddle2.y + g.ln: 
@@ -95,7 +98,8 @@ class Ball:
                     self.vx = -self.vx
                 else:
                     self.vx = -self.vx
-        
+            g.hit.rewind()
+            g.hit.play()
     
     def checkWin(self,x,r,vx):
         if self.x + self.r > g.w or self.x - self.r < 0:
@@ -122,7 +126,7 @@ class Game:
         self.pauseTime = 0
         self.cumulativePauseTime = 0
         self.timer = 0 
-        self.img = loadImage(path+ "/images/background.png")
+        self.img = loadImage(path+ "/images/backgroundpitch.png")
         
         self.state = "menu"
         
@@ -131,9 +135,10 @@ class Game:
         self.pause = False
         self.pauseSound = player.loadFile(path+"/sounds/pause.mp3")
         self.goSound = player.loadFile(path+"/sounds/gameover.wav")
+        self.hit = player.loadFile(path+"/sounds/hit.wav")
         
-        self.paddle1 = Player1(self.w-self.th,self.h/2,100)  #(0,self.h/2,0)
-        self.paddle2 = Player2(0,self.h/2,100)   #(self.w-self.th,self.h/2,0)
+        self.paddle1 = Player1(self.w-self.th,self.h/2.75,100)  #(0,self.h/2,0)
+        self.paddle2 = Player2(0,self.h/2.75,100)   #(self.w-self.th,self.h/2,0)
         self.ball = Ball(self.w/2,self.h/2,self.r)
     
     def display(self):
