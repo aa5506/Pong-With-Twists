@@ -76,11 +76,11 @@ class Ball:
             return x
         
     def checkHit(self,x,r,y,vy):
-        speedlist = [0.5,0.75,1,1.25,1.5,1.75]
+        speedlist = [0.6,0.75,1.5,1.75,2]
         if g.w - (self.x+self.r) < g.th and self.y+self.r > g.paddle1.y and self.y-self.r < g.paddle1.y + g.ln:
             if self.vx > 0:
                 if self.vx < 6:
-                    speed = speedlist[random.randint(0,5)]
+                    speed = speedlist[random.randint(0,4)]
                     self. vx = self.vx * speed
                     self.vx = -self.vx
                 else:
@@ -93,7 +93,7 @@ class Ball:
         if self.x-self.r < g.th and self.y+self.r > g.paddle2.y and self.y-self.r < g.paddle2.y + g.ln: 
             if self.vx < 0:
                 if self.vx > -6:
-                    speed = speedlist[random.randint(0,5)]
+                    speed = speedlist[random.randint(0,4)]
                     self. vx = self.vx * speed
                     self.vx = -self.vx
                 else:
@@ -126,7 +126,7 @@ class Game:
         self.pauseTime = 0
         self.cumulativePauseTime = 0
         self.timer = 0 
-        self.img = loadImage(path+ "/images/backgroundpitch.png")
+        #self.img = loadImage(path+ "/images/backgroundpitch.png")
         
         self.state = "menu"
         
@@ -148,7 +148,7 @@ class Game:
         
 
         background(0)
-        image(self.img,0,0,640,538)
+        #image(self.img,0,0,640,538)
         fill(255,0,0)
         textSize(30)
         text(str(elaspeTime),50,30)
