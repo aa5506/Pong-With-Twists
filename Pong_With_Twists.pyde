@@ -5,7 +5,8 @@ player = Minim(this)
 #timer = 0
 #pauseTime = 0
 
-
+ 
+        
 class Paddle:
     def __init__(self,x,y,ln):
         self.x = x
@@ -67,6 +68,7 @@ class Ball:
         self.checkBounds(self.y,self.r,self.vy)
         self.checkHit(self.x,self.r,self.y,self.vx)
         self.checkWin(self.x,self.r,self.vx)
+        self.changeLength()
 
                 
                 
@@ -76,7 +78,7 @@ class Ball:
             return x
         
     def checkHit(self,x,r,y,vy):
-        speedlist = [0.6,0.75,1.5,1.75,2]
+        speedlist = [0.8,0.9,1.5,1.75,2]
         if g.w - (self.x+self.r) < g.th and self.y+self.r > g.paddle1.y and self.y-self.r < g.paddle1.y + g.ln:
             if self.vx > 0:
                 if self.vx < 6:
@@ -108,11 +110,31 @@ class Ball:
             g.music.rewind()
             g.goSound.rewind()
             g.goSound.play()
+            
+    def changeLength(self):
+        if g.ln > 50:
+            g.ln -= 0.05
 
     def display(self):
         self.update()
         fill(250)
         ellipse(self.x,self.y,self.r*2,self.r*2)
+        
+class Package:
+    def __init__(self,x,y,w,h):
+        self.x = x
+        self.y = y
+        self.w = w
+        self.h = h
+        self.state = "unopened"
+        
+    def display(self):
+        if self.state == "unopened":
+            fill(255)
+            rect(self.x,self.y,self.w,self.h)
+        if g.ball.vx > 0:
+        g.ball.x + g.ball.r == self.x 
+       
                 
         
 class Game:
@@ -141,11 +163,10 @@ class Game:
         self.paddle1 = Player1(self.w-self.th,self.h/2.75,100)  #(0,self.h/2,0)
         self.paddle2 = Player2(0,self.h/2.75,100)   #(self.w-self.th,self.h/2,0)
         self.ball = Ball(self.w/2,self.h/2,self.r)
-    
-
         
-        
-    
+        self.packages = []
+        for i in range(10):
+            self.packages.append(Package(self.w//2,50+i*50,50,50 ))
     
     def display(self):
 
@@ -172,10 +193,15 @@ class Game:
         self.paddle1.display()
         self.paddle2.display()
         self.ball.display()
+        
+        
+        for i in self.packages:
+            i.display()
+
             
     
         
-g = Game(640,538,20,120,15)        
+g = Game(640,538,20,150,15)        
         
         
 def setup():
@@ -202,9 +228,9 @@ def draw():
         
     elif g.state == "instructions":
         background(0)
-        textSize(34)
+        textSize(24)
         fill(255)
-        text("This is how you play. Click to go back",g.w//3, g.h//2+40)
+        text("Two players play as a team. Try to \n keep the ball in play as long as possible. \n And be prepared for some surprises! \n (Click to go back)",g.w//5, g.h//3)
 
         
     elif g.state == "play":
@@ -217,7 +243,6 @@ def draw():
         fill (255,0,0)
         text("GAME OVER", g.w//3.5 - 30, g.h//3 +110)
         textSize(30)
-        fill(255)
         text("Your Score: " + str(g.score), g.w//3, g.h//2 +110)
         text("High Score: " + str(g.highScore), g.w//3, g.h//1.5 +110)
         
@@ -229,15 +254,15 @@ def mouseClicked():
         g.timer=time.time()
         g.music.play()
     
-    if g.state == "menu" and g.w//3 < mouseX < g.w//3 + 200 and g.h//1.3 - 30 < mouseY < g.h//1.3 + 5:
+    elif g.state == "menu" and g.w//3 < mouseX < g.w//3 + 200 and g.h//1.3 - 30 < mouseY < g.h//1.3 + 5:
         g.state = "instructions"
         
-    if g.state == "instructions" and 0 < mouseX < g.w and 0 < mouseY < g.h:
-        g.__init__(640,538,20,120,15)
+    elif g.state == "instructions" and 0 < mouseX < g.w and 0 < mouseY < g.h:
+        g.__init__(640,538,20,150,15)
 
         
-    if g.state == "gameover" and 0 < mouseX < g.w and 0 < mouseY < g.h:
-        g.__init__(640,538,20,120,15)
+    elif g.state == "gameover" and 0 < mouseX < g.w and 0 < mouseY < g.h:
+        g.__init__(640,538,20,150,15)
         
         
         
