@@ -121,19 +121,26 @@ class Ball:
         ellipse(self.x,self.y,self.r*2,self.r*2)
         
 class Package:
-    def __init__(self,x,y,w,h):
+    def __init__(self,x,y,r):
         self.x = x
         self.y = y
-        self.w = w
-        self.h = h
+        self.r = r
         self.state = "unopened"
+        self.active = True
         
+        
+    def distance(self,ball):
+        return ((self.x-ball.x)**2+(self.y-ball.y)**2)**0.5  
+     
     def display(self):
         if self.state == "unopened":
-            fill(255)
-            rect(self.x,self.y,self.w,self.h)
-        if g.ball.vx > 0:
-        g.ball.x + g.ball.r == self.x 
+            fill(255,0,0)
+            ellipse(self.x,self.y,self.r,self.r)
+            if self.distance(g.ball) <= self.r + g.ball.r: 
+                self.state = "opened"
+                if self.active == True:
+                    g.ball.r += 5
+                    self.active = False
        
                 
         
@@ -164,9 +171,12 @@ class Game:
         self.paddle2 = Player2(0,self.h/2.75,100)   #(self.w-self.th,self.h/2,0)
         self.ball = Ball(self.w/2,self.h/2,self.r)
         
-        self.packages = []
-        for i in range(10):
-            self.packages.append(Package(self.w//2,50+i*50,50,50 ))
+        self.package1 = Package(500,300,50)
+        self.package2 = Package(300,300,50)
+        self.package3 = Package(200,100,50)
+        self.package4 = Package(550,300,50)
+        self.package5 = Package(100,400,50)
+
     
     def display(self):
 
@@ -194,10 +204,15 @@ class Game:
         self.paddle2.display()
         self.ball.display()
         
-        
-        for i in self.packages:
-            i.display()
-
+        self.package1.display()
+        if self.score >= 6:
+            self.package2.display()
+        if self.score >= 16:
+            self.package3.display()
+        if self.score >= 26:
+            self.package4.display()
+        if self.score >= 41:
+            self.package5.display()
             
     
         
