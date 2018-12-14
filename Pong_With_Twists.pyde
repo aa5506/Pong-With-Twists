@@ -113,8 +113,7 @@ class Ball:
         self.update()
         fill(250)
         ellipse(self.x,self.y,self.r*2,self.r*2)
-            
-        
+                
         
 class Game:
     def __init__(self,w,h,th,ln,r):
@@ -126,6 +125,8 @@ class Game:
         self.pauseTime = 0
         self.cumulativePauseTime = 0
         self.timer = 0 
+        self.score = 0
+        self.highScore = 0
         #self.img = loadImage(path+ "/images/backgroundpitch.png")
         
         self.state = "menu"
@@ -141,11 +142,27 @@ class Game:
         self.paddle2 = Player2(0,self.h/2.75,100)   #(self.w-self.th,self.h/2,0)
         self.ball = Ball(self.w/2,self.h/2,self.r)
     
+
+        
+        
+    
+    
     def display(self):
 
         currentTime = time.time()
         elaspeTime = int(currentTime - self.timer - self.cumulativePauseTime)
+        self.score = elaspeTime
         
+        x = open('highScore.txt','r')
+        score = x.readline()
+        self.highScore = int(score)
+        x.close()
+        
+        if self.score > self.highScore:
+            y = open('highScore.txt','w')
+            y.write(str(self.score))
+            y.close()
+    
 
         background(0)
         #image(self.img,0,0,640,538)
@@ -182,6 +199,12 @@ def draw():
         else:
             fill(255)
         text("Instructions", g.w//3, g.h//1.3)
+        
+    elif g.state == "instructions":
+        background(0)
+        textSize(34)
+        fill(255)
+        text("This is how you play. Click to go back",g.w//3, g.h//2+40)
 
         
     elif g.state == "play":
@@ -193,6 +216,10 @@ def draw():
         textSize(50)
         fill (255,0,0)
         text("GAME OVER", g.w//3.5 - 30, g.h//3 +110)
+        textSize(30)
+        fill(255)
+        text("Your Score: " + str(g.score), g.w//3, g.h//2 +110)
+        text("High Score: " + str(g.highScore), g.w//3, g.h//1.5 +110)
         
         #g.__init__(500,500,20,120,15)
     
@@ -201,7 +228,13 @@ def mouseClicked():
         g.state = "play"
         g.timer=time.time()
         g.music.play()
+    
+    if g.state == "menu" and g.w//3 < mouseX < g.w//3 + 200 and g.h//1.3 - 30 < mouseY < g.h//1.3 + 5:
+        g.state = "instructions"
         
+    if g.state == "instructions" and 0 < mouseX < g.w and 0 < mouseY < g.h:
+        g.__init__(640,538,20,120,15)
+
         
     if g.state == "gameover" and 0 < mouseX < g.w and 0 < mouseY < g.h:
         g.__init__(640,538,20,120,15)
